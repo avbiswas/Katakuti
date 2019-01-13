@@ -1,23 +1,25 @@
 package katakuti;
 
+//This class represents the CPU Player.
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class CPUplayer implements Player {
-	ArrayList<ArrayList<Integer>> combo;
+	ArrayList<ArrayList<Integer>> combo;	//stores the different combinations of points that are possible to recieve points
 	public  String name="CPU";
 	private int size;
 	private int score;
 	private int playerId;
-	private ArrayList<Integer> moveList;
-	private ArrayList<Integer> opponentMoveList;
-	ArrayList<ArrayList<Integer>> availableMoves;	
+	private ArrayList<Integer> moveList;	//stores the cells occupied by the current player
+	private ArrayList<Integer> opponentMoveList;	//stores the cells occupied by the opponent
+	ArrayList<ArrayList<Integer>> availableMoves;	//stores the free cells in the grid
 	public CPUplayer(int size, int id) {
 		this.size=size;
 		combo=new ArrayList<ArrayList<Integer>>();
 		this.getCombo();
 		if (id==2){
-			this.setScore(1);
+			this.setScore(1);		// Second player starts with a default score of 1
 		}
 		else{
 			this.setScore(0);
@@ -35,6 +37,8 @@ public class CPUplayer implements Player {
 	public ArrayList<ArrayList<Integer>> Combo(){
 		return combo;
 	}
+	
+	//Function to fill the availableMoves list.
 	private void fillAvailMoves() {
 		int k= (int) Math.ceil((Math.sqrt(size))/2)-1;
 		int row,col;
@@ -56,6 +60,8 @@ public class CPUplayer implements Player {
 			//availableMoves=sortByPreference(availableMoves);
 			
 	}
+	
+	// finds the most preferred move from the available moves array by sorting with highest pref.
 	public ArrayList<ArrayList<Integer>> sortByPreference(ArrayList<ArrayList<Integer>> tempAvail){
 
 		ArrayList<ArrayList<Integer>> sort= new ArrayList<ArrayList<Integer>>();
@@ -80,6 +86,9 @@ public class CPUplayer implements Player {
 		
 		return sort;
 		}
+	
+	// Populates all the combinations of cells (1-D indexes) that will win points.
+	
 	private void getCombo() {
 		int i,j,row=-1;
 		int len=(int) Math.sqrt((double)size);
@@ -171,6 +180,8 @@ public class CPUplayer implements Player {
 	public int sizeofAvailMoves(){
 		return availableMoves.size();
 	}
+	
+	//Decides the best move
 	public int move(){
 		int i=0;
 		ArrayList<ArrayList<Integer>> tempAvail=new ArrayList<ArrayList<Integer>>();
@@ -190,8 +201,8 @@ public class CPUplayer implements Player {
 		}
 			while (i<tempAvail.size()){
 			int preference=tempAvail.get(i).get(1);	
-			preference+=analyzeAttack(tempAvail.get(i).get(0));
-			preference+=analyzeDefend(tempAvail.get(i).get(0));
+			preference+=analyzeAttack(tempAvail.get(i).get(0));	//calculate preference for Attack wrt current cell
+			preference+=analyzeDefend(tempAvail.get(i).get(0));	//calculate preference for Defence wrt current cell
 			tempAvail.get(i).set(1, preference);
 			i++;
 			}
@@ -203,6 +214,8 @@ public class CPUplayer implements Player {
 			return moverandom(tempAvail);
 	}
 	
+	
+	//Array to identify critical cells where current player can score. Higher scoring cells will be given more priority when deciding the final move.
 	public int analyzeAttack(int index){
 		ArrayList<ArrayList<Integer>> temp= new ArrayList<ArrayList<Integer>>();
 		int i=0,c=0,preference=0;
@@ -227,14 +240,14 @@ public class CPUplayer implements Player {
 				}
 				if(moveList.contains(temp.get(i).get(j)))
 					{	
-						matches++;
+						matches++; // higher the matches, higher the potential for a scoring points with the respective cell
 						
 					}
 					else
 					{
 						if (matches>=1 && foundMove==true){
 							switch(matches){
-							 case 1: preference+=2;break;
+							 case 1: preference+=2;break;	// intuitive hardcoded values for various values of matches
 							 case 2: preference+=4;
 							 			break;
 							 case 3: preference +=7;
@@ -273,6 +286,8 @@ public class CPUplayer implements Player {
 		return preference;
 			
 	}
+	
+	//Array to identify critical cells where opponent can score. Higher scoring cells will be given more priority when deciding the final move.
 	public int analyzeDefend(int index){
 		ArrayList<ArrayList<Integer>> temp= new ArrayList<ArrayList<Integer>>();
 		int i=0,c=0,preference=0;
@@ -300,7 +315,7 @@ public class CPUplayer implements Player {
 					}
 					if(opponentMoveList.contains(temp.get(i).get(j)))
 					{	
-						matches++;
+						matches++;	//higher the value, more high-scoring it will be for the opponent. So we must priorotize it.
 						}
 					else
 					{
