@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.zombieinawaterbottle.katakuti.Game;
 
+
+//User player
 public class User implements Player {
 	public String name="USER";
 	int score;
