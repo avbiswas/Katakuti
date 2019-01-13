@@ -11,3 +11,5 @@ The classic game of Tic Tac Toe with the following rules:
 5) The game continues till the board is completely filled.
 6) The center is super important in a game like this! Since the 1st player gets an extra move as well as the chance to take the central square, the second player is compensated with a free point at the start of the game. The game starts with 0 - 1 score.
 
+
+Check the Katakuti/src/katakuti/CPUplayer.java file for the main code for the AI.
