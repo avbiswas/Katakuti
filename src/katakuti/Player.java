@@ -2,6 +2,8 @@ package katakuti;
 
 import java.util.ArrayList;
 
+
+//Interface from where the CPU Player and Human Player classes will be derived.
 public interface Player {
 		int score=0;
 		int playerId=0;
